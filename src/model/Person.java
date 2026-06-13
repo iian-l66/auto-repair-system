@@ -3,9 +3,9 @@ package model;
 public abstract class Person {
     protected String name;
     protected int age;
-    protected int cpf;
+    protected String cpf;
 
-    public Person(String name, int age, int cpf) {
+    public Person(String name, int age, String cpf) {
         this.name = name;
         this.age = age;
         this.cpf = cpf;
@@ -27,11 +27,11 @@ public abstract class Person {
         this.age = age;
     }
 
-    public int getCpf() {
+    public String getCpf() {
         return cpf;
     }
 
-    public void setCpf(int cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 }
