@@ -10,8 +10,7 @@ public class Client extends Person{
         super(name, age, cpf);
     }
 
-    public void addCar (String plate, Car car) {
-        cars.put(plate, car);
+    public void addCar (Car car) {
+        cars.put(car.getPlate(), car);
     }
-
 }
