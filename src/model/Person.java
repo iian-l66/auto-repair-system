@@ -1,11 +1,13 @@
 package model;
 
 public abstract class Person {
+    protected final Long id;
     protected String name;
     protected int age;
     protected String cpf;
 
-    public Person(String name, int age, String cpf) {
+    public Person(Long id, String name, int age, String cpf) {
+        this.id = id;
         this.name = name;
         this.age = age;
         this.cpf = cpf;
@@ -33,5 +35,9 @@ public abstract class Person {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
