@@ -44,4 +44,9 @@ public class Car {
     public void setPlate(String plate) {
         this.plate = plate;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s, %s, %d, %s", brand, model, year, plate);
+    }
 }
