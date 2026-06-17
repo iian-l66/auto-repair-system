@@ -13,4 +13,9 @@ public class Client extends Person{
     public void addCar (Car car) {
         cars.put(car.getPlate(), car);
     }
+
+    @Override
+    public String toString() {
+        return name + ", " + age + ", " + cpf;
+    }
 }
