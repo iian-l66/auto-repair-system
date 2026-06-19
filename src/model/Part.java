@@ -2,21 +2,17 @@ package model;
 
 import java.math.BigDecimal;
 
-public class Part {
-    private Long id;
+public class Part extends BaseEntity{
+    private static Long nextId = 1L;
     private String name;
     private String brand;
     private BigDecimal price;
 
-    public Part(Long id, String name, String brand, BigDecimal price) {
-        this.id = id;
+    public Part(String name, String brand, BigDecimal price) {
+        super(nextId++);
         this.name = name;
         this.brand = brand;
         this.price = price;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getBrand() {

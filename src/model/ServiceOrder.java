@@ -7,11 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ServiceOrder {
+public class ServiceOrder extends BaseEntity {
     private static final DateTimeFormatter DATE_FORMAT =
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     private static Long nextId = 1L;
-    private final Long id;
     private Client client;
     private Car car;
     private ServiceOrderStatus status;
@@ -21,7 +20,7 @@ public class ServiceOrder {
     private BigDecimal totalPrice;
 
     public ServiceOrder(Car car, Client client) {
-        this.id = nextId++;
+        super(nextId++);
         this.car = car;
         this.client = client;
         this.status = ServiceOrderStatus.OPEN;
@@ -50,10 +49,6 @@ public class ServiceOrder {
 
     public void removePart (Part part) {
         parts.remove(part);
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public Client getClient() {

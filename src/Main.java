@@ -1,25 +1,18 @@
 import model.*;
+import repository.ClientRepository;
+import repository.ServiceOrderRepository;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) {
-        Part part = new Part(45553L, "Vela", "bosch", new BigDecimal("399.00"));
-        Part part2 = new Part(45553L, "Vela", "bosch", new BigDecimal("100.00"));
-        Car car = new Car("Gol", "vw", 2008, "AYU678");
-        Client client = new Client("Maylu", 23, "455.786.897-78");
-        Employee employee = new Employee("Jhon", 44, "091.838.455-99");
-        ServiceOrder s1 = new ServiceOrder(car, client);
-        s1.calculateTotalPrice();
-        System.out.println(s1.getTotalPrice());
-        System.out.println("----------------");
-        s1.addPart(part);
-        s1.calculateTotalPrice();
-        System.out.println(s1.getTotalPrice());
-        System.out.println("----------");
-        s1.addPart(part2);
-        s1.calculateTotalPrice();
-        s1.calculateTotalPrice();
-        System.out.println(s1.getTotalPrice());
+        ServiceOrderRepository serviceOrderRepository = new ServiceOrderRepository();
+        serviceOrderRepository.addServiceOrder(new ServiceOrder(new Car("corsel", "gm", 2001, "ASR456"),
+                new Client("Jose", 33, "0988989032")));
+        serviceOrderRepository.addServiceOrder(new ServiceOrder(new Car("GOL", "VW", 2001, "ATY987"),
+                new Client("Miguel", 33, "435546466")));
+
+
     }
 }
