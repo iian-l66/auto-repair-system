@@ -1,7 +1,7 @@
 package service;
 
 import exception.CpfAlreadyRegisteredException;
-import exception.CpfNotFoundException;
+import exception.ClientNotFoundException;
 import model.Client;
 import repository.ClientRepository;
 
@@ -13,7 +13,7 @@ public class ClientService {
     }
 
     public void addClient (Client client) {
-        if (clientRepository.getClientMap().containsKey(client.getCpf()))
+        if (clientRepository.getClientMap().containsKey(client.getId()))
             throw new CpfAlreadyRegisteredException("This cpf already registered!");
 
         clientRepository.addClient(client);
@@ -26,17 +26,27 @@ public class ClientService {
             clientRepository.listClients();
     }
 
-    public Client getClient (String cpf) {
-        if (!clientRepository.getClientMap().containsKey(cpf))
-            throw new CpfNotFoundException("This cpf is not registered.");
+    public Client getClient (Long id) {
+        if (!clientRepository.getClientMap().containsKey(id))
+            throw new ClientNotFoundException("This id is not registered.");
 
-        return clientRepository.getClient(cpf);
+        return clientRepository.getClient(id);
     }
 
-    public void removeClient (String cpf) {
-        if (!clientRepository.getClientMap().containsKey(cpf))
-            throw new CpfNotFoundException("This cpf is not registered.");
+    public Client getClient (String cpf) {
+        Client client = clientRepository.getClientMap().values().stream()
+                .filter(x -> x.getCpf().equals(cpf)).findFirst().orElse(null);
 
-        clientRepository.removeClient(cpf);
+        if (client == null)
+            throw new ClientNotFoundException("This cpf is not registered.");
+
+        return client;
+    }
+
+    public void removeClient (Long id) {
+        if (!clientRepository.getClientMap().containsKey(id))
+            throw new ClientNotFoundException("This cpf is not registered.");
+
+        clientRepository.removeClient(id);
     }
 }
