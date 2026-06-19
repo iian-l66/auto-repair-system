@@ -1,6 +1,7 @@
 package service;
 
 import exception.CpfAlreadyRegisteredException;
+import exception.CpfNotFoundException;
 import model.Client;
 import repository.ClientRepository;
 
@@ -16,5 +17,26 @@ public class ClientService {
             throw new CpfAlreadyRegisteredException("This cpf already registered!");
 
         clientRepository.addClient(client);
+    }
+
+    public void listClients () {
+        if (clientRepository.getClientMap().isEmpty())
+            System.out.println("No clients registered yet.");
+        else
+            clientRepository.listClients();
+    }
+
+    public Client getClient (String cpf) {
+        if (!clientRepository.getClientMap().containsKey(cpf))
+            throw new CpfNotFoundException("This cpf is not registered.");
+
+        return clientRepository.getClient(cpf);
+    }
+
+    public void removeClient (String cpf) {
+        if (!clientRepository.getClientMap().containsKey(cpf))
+            throw new CpfNotFoundException("This cpf is not registered.");
+
+        clientRepository.removeClient(cpf);
     }
 }
