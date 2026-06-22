@@ -1,6 +1,5 @@
 package repository;
 
-import model.Client;
 import model.Employee;
 
 import java.util.HashMap;
@@ -17,7 +16,7 @@ public class EmployeeRepository {
         employeeMap.forEach((key, value) -> System.out.println(value));
     }
 
-    public void addClient (Employee employee) {
+    public void addEmployee(Employee employee) {
         employeeMap.put(employee.getId(), employee);
     }
 
