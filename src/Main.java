@@ -1,18 +1,25 @@
-import model.*;
 import repository.ClientRepository;
+import repository.EmployeeRepository;
+import repository.PartRepository;
 import repository.ServiceOrderRepository;
+import service.ClientService;
+import service.EmployeeService;
+import service.PartService;
+import service.ServiceOrderService;
+import ui.Menu;
 
-import java.math.BigDecimal;
-import java.util.UUID;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        ServiceOrderRepository serviceOrderRepository = new ServiceOrderRepository();
-        serviceOrderRepository.addServiceOrder(new ServiceOrder(new Car("corsel", "gm", 2001, "ASR456"),
-                new Client("Jose", 33, "0988989032")));
-        serviceOrderRepository.addServiceOrder(new ServiceOrder(new Car("GOL", "VW", 2001, "ATY987"),
-                new Client("Miguel", 33, "435546466")));
+        Scanner scanner = new Scanner(System.in);
+        ClientService clientService = new ClientService(new ClientRepository());
+        EmployeeService employeeService = new EmployeeService(new EmployeeRepository());
+        PartService partService = new PartService(new PartRepository());
+        ServiceOrderService serviceOrderService = new ServiceOrderService(new ServiceOrderRepository());
 
-
+        Menu menu = new Menu(scanner, clientService, employeeService,
+                partService, serviceOrderService);
+        menu.initialMenu();
     }
 }
