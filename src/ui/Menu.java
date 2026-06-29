@@ -2,7 +2,9 @@ package ui;
 
 import exception.ClientNotFoundException;
 import exception.CpfAlreadyRegisteredException;
+import exception.EmployeeNotFoundException;
 import model.Client;
+import model.Employee;
 import service.ClientService;
 import service.EmployeeService;
 import service.PartService;
@@ -67,7 +69,7 @@ public class Menu {
                     String name = scanner.nextLine();
                     System.out.print("Client age: ");
                     int age = Integer.parseInt(scanner.nextLine());
-                    System.out.print("Client cpf: ");
+                    System.out.print("Client CPF: ");
                     String cpf = scanner.nextLine();
                     clientService.addClient(new Client(name, age, cpf));
                 }
@@ -132,6 +134,64 @@ public class Menu {
             System.out.println("[4]- Remove Employee");
             System.out.println("[5]- Back");
             choice = getInput();
+            switch (choice) {
+                case 1: try {
+                    System.out.print("Employee name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Employee age: ");
+                    int age = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Employee CPF: ");
+                    String cpf = scanner.nextLine();
+                    employeeService.addEmployee(new Employee(name, age, cpf));
+                }
+                catch (CpfAlreadyRegisteredException e) {
+                    System.out.println(e.getMessage());
+                }
+                    break;
+                case 2:
+                    try {
+                        System.out.println("Do you want to search by CPF or ID? (1-CPF/2-ID): ");
+                        int option = Integer.parseInt(scanner.nextLine());
+                        if (option == 1) {
+                            System.out.print("Enter CPF: ");
+                            String cpf = scanner.nextLine();
+                            Employee employee = employeeService.getEmployee(cpf);
+                            System.out.println(employee);
+                        }
+                        else {
+                            System.out.print("Enter ID: ");
+                            Long id = Long.parseLong(scanner.nextLine());
+                            Employee employee = employeeService.getEmployee(id);
+                            System.out.println(employee);
+                        }
+                    }
+                    catch (EmployeeNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 3: employeeService.listEmployees(); break;
+                case 4:
+                    try {
+                        System.out.println("Do you want to remove by CPF or ID? (1-CPF/2-ID): ");
+                        int option = Integer.parseInt(scanner.nextLine());
+                        if (option == 1) {
+                            System.out.print("Enter CPF: ");
+                            String cpf = scanner.nextLine();
+                            employeeService.removeEmployee(cpf);
+                            System.out.println("Employee removed!");
+                        }
+                        else {
+                            System.out.print("Enter ID: ");
+                            Long id = Long.parseLong(scanner.nextLine());
+                            employeeService.removeEmployee(id);
+                            System.out.println("Employee removed!");
+                        }
+                    }
+                    catch (EmployeeNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+            }
         }
     }
 

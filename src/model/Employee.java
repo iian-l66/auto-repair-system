@@ -5,4 +5,10 @@ public class Employee extends Person{
     public Employee(String name, int age, String cpf) {
         super(nextId++, name, age, cpf);
     }
+
+    @Override
+    public String toString() {
+        return id + ", " + name + ", " + age + ", " + cpf;
+    }
+
 }
