@@ -1,15 +1,15 @@
 package ui;
 
-import exception.ClientNotFoundException;
-import exception.CpfAlreadyRegisteredException;
-import exception.EmployeeNotFoundException;
+import exception.*;
 import model.Client;
 import model.Employee;
+import model.Part;
 import service.ClientService;
 import service.EmployeeService;
 import service.PartService;
 import service.ServiceOrderService;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class Menu {
@@ -205,6 +205,39 @@ public class Menu {
             System.out.println("[4]- Remove Part");
             System.out.println("[5]- Back");
             choice = getInput();
+            switch (choice) {
+                case 1:
+                    System.out.print("Part name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Part Brand: ");
+                    String brand = scanner.nextLine();
+                    System.out.print("Part price: ");
+                    BigDecimal price = new BigDecimal(scanner.nextLine());
+                    partService.addPart(new Part(name, brand, price));
+                    break;
+                case 2: try {
+                    System.out.print("Enter Part ID: ");
+                    Long id = Long.parseLong(scanner.nextLine());
+                    Part part = partService.getPart(id);
+                    System.out.println(part);
+                }
+                catch (PartNotFoundException e) {
+                    System.out.println(e.getMessage());
+                }
+                    break;
+                case 3: partService.listParts(); break;
+                case 4:
+                    try {
+                        System.out.print("Enter Part ID: ");
+                        Long id = Long.parseLong(scanner.nextLine());
+                        partService.removePart(id);
+                        System.out.println("Part removed!");
+                    }
+                    catch (PartNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+            }
         }
     }
 
