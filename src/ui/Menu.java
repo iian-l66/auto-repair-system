@@ -1,5 +1,6 @@
 package ui;
 
+import exception.ClientNotFoundException;
 import exception.CpfAlreadyRegisteredException;
 import model.Client;
 import service.ClientService;
@@ -60,6 +61,64 @@ public class Menu {
             System.out.println("[4]- Remove Client");
             System.out.println("[5]- Back");
             choice = getInput();
+            switch (choice) {
+                case 1: try {
+                    System.out.print("Client name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Client age: ");
+                    int age = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Client cpf: ");
+                    String cpf = scanner.nextLine();
+                    clientService.addClient(new Client(name, age, cpf));
+                }
+                catch (CpfAlreadyRegisteredException e) {
+                    System.out.println(e.getMessage());
+                }
+                    break;
+                case 2:
+                    try {
+                        System.out.println("Do you want to search by CPF or ID? (1-CPF/2-ID): ");
+                        int option = Integer.parseInt(scanner.nextLine());
+                        if (option == 1) {
+                            System.out.print("Enter CPF: ");
+                            String cpf = scanner.nextLine();
+                            Client client = clientService.getClient(cpf);
+                            System.out.println(client);
+                        }
+                        else {
+                            System.out.print("Enter ID: ");
+                            Long id = Long.parseLong(scanner.nextLine());
+                            Client client = clientService.getClient(id);
+                            System.out.println(client);
+                        }
+                    }
+                    catch (ClientNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 3: clientService.listClients(); break;
+                case 4:
+                    try {
+                        System.out.println("Do you want to remove by CPF or ID? (1-CPF/2-ID): ");
+                        int option = Integer.parseInt(scanner.nextLine());
+                        if (option == 1) {
+                            System.out.print("Enter CPF: ");
+                            String cpf = scanner.nextLine();
+                            clientService.removeClient(cpf);
+                            System.out.println("Client removed!");
+                        }
+                        else {
+                            System.out.print("Enter ID: ");
+                            Long id = Long.parseLong(scanner.nextLine());
+                            clientService.removeClient(id);
+                            System.out.println("Client removed!");
+                        }
+                    }
+                    catch (ClientNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+            }
         }
     }
 
