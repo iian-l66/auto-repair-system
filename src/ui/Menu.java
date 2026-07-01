@@ -61,7 +61,8 @@ public class Menu {
             System.out.println("[2]- Search Client");
             System.out.println("[3]- List Clients");
             System.out.println("[4]- Remove Client");
-            System.out.println("[5]- Back");
+            System.out.println("[5]- Add Car");
+            System.out.println("[6]- Back");
             choice = getInput();
             switch (choice) {
                 case 1: try {
@@ -117,6 +118,29 @@ public class Menu {
                         }
                     }
                     catch (ClientNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 5:
+                    Client client;
+                    try {
+                        System.out.println("Do you want to search by CPF or ID? (1-CPF/2-ID): ");
+                        int option = Integer.parseInt(scanner.nextLine());
+                        if (option == 1) {
+                            System.out.print("Enter CPF: ");
+                            String cpf = scanner.nextLine();
+                            client = clientService.getClient(cpf);
+                        }
+                        else {
+                            System.out.print("Enter ID: ");
+                            Long id = Long.parseLong(scanner.nextLine());
+                            client = clientService.getClient(id);
+                        }
+                        System.out.println(client);
+                        Car car = addCar();
+                        clientService.addCar(client, car);
+                    }
+                    catch (ClientNotFoundException | CarAlreadyRegisteredException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
@@ -308,7 +332,7 @@ public class Menu {
                     break;
                 case 3:
                     System.out.println("Which types of service orders do you want to list?");
-                    System.out.println("1- Open\n2- Closed\n3-In Progress\n4- All");
+                    System.out.println("1- Open\n2- Closed\n3- In Progress\n4- All");
                     int index = Integer.parseInt(scanner.nextLine());
                     serviceOrderService.listServiceOrders(
                             switch (index) {
@@ -331,6 +355,18 @@ public class Menu {
                     break;
             }
         }
+    }
+
+    public Car addCar () {
+        System.out.print("What is the brand of the car? ");
+        String brand = scanner.nextLine();
+        System.out.print("What is the car model? ");
+        String model = scanner.nextLine();
+        System.out.print("What is the car year? ");
+        int year = Integer.parseInt(scanner.nextLine());
+        System.out.print("What is the car plate? ");
+        String plate = scanner.nextLine();
+        return new Car(model, brand, year, plate);
     }
 
     public int getInput () {

@@ -1,10 +1,13 @@
 package service;
 
+import exception.CarAlreadyRegisteredException;
 import exception.CpfAlreadyRegisteredException;
 import exception.ClientNotFoundException;
+import model.Car;
 import model.Client;
 import repository.ClientRepository;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ClientService {
@@ -27,6 +30,14 @@ public class ClientService {
             System.out.println("No clients registered yet.");
         else
             clientRepository.listClients();
+    }
+
+    public void addCar (Client client, Car car) {
+        if (client.listCars().stream().anyMatch(c -> c.
+                getPlate().equals(car.getPlate())))
+            throw new CarAlreadyRegisteredException("This plate already registered.");
+
+        client.addCar(car);
     }
 
     public Client getClient (Long id) {

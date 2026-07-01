@@ -1,3 +1,5 @@
+import model.Car;
+import model.Client;
 import repository.ClientRepository;
 import repository.EmployeeRepository;
 import repository.PartRepository;
@@ -8,6 +10,7 @@ import service.PartService;
 import service.ServiceOrderService;
 import ui.Menu;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
