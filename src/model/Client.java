@@ -1,6 +1,7 @@
 package model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Client extends Person{
@@ -13,6 +14,10 @@ public class Client extends Person{
 
     public void addCar (Car car) {
         cars.put(car.getPlate(), car);
+    }
+
+    public List<Car> listCars () {
+        return cars.values().stream().toList();
     }
 
     @Override

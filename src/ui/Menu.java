@@ -1,15 +1,15 @@
 package ui;
 
+import com.sun.security.jgss.GSSUtil;
 import exception.*;
-import model.Client;
-import model.Employee;
-import model.Part;
+import model.*;
 import service.ClientService;
 import service.EmployeeService;
 import service.PartService;
 import service.ServiceOrderService;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
@@ -251,6 +251,85 @@ public class Menu {
             System.out.println("[4]- Remove Service Order");
             System.out.println("[5]- Back");
             choice = getInput();
+            switch (choice) {
+                case 1:
+                    try {
+                        Client client;
+                        System.out.println("On behalf of which client do you wish to open the order?");
+                        System.out.println("Do you want to search by CPF or ID? (1-CPF/2-ID): ");
+                        int option = Integer.parseInt(scanner.nextLine());
+                        if (option == 1) {
+                            System.out.print("Enter CPF: ");
+                            String cpf = scanner.nextLine();
+                            client = clientService.getClient(cpf);
+                            System.out.println(client);
+                        }
+                        else {
+                            System.out.print("Enter ID: ");
+                            Long id = Long.parseLong(scanner.nextLine());
+                            client = clientService.getClient(id);
+                            System.out.println(client);
+                        }
+                        List<Car> cars = client.listCars();
+                        if (!cars.isEmpty()) {
+                            System.out.println("Choose which car you want to add to the order.");
+                            for (int i = 0; i < cars.size(); i++) {
+                                System.out.println((i + 1) + "- " + cars.get(i));
+                            }
+                            System.out.println("Enter the index: ");
+                            int index = Integer.parseInt(scanner.nextLine());;
+                            while (index <= 0 || index > cars.size()) {
+                                System.out.println("Invalid Index");
+                                System.out.print("Enter: ");
+                                index = Integer.parseInt(scanner.nextLine());
+                            }
+                            Car car = cars.get(index - 1);
+                            System.out.println(car);
+                            serviceOrderService.addServiceOrder(new ServiceOrder(car, client));
+                            System.out.println("Service Order created successfully!");
+                        }
+                        else {
+                            System.out.println("There are no cars registered for this customer; register them first.");
+                        }
+                    }
+                    catch (ClientNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 2: try {
+                    System.out.print("Enter Service Order ID: ");
+                    Long id = Long.parseLong(scanner.nextLine());
+                    ServiceOrder serviceOrder = serviceOrderService.getServiceOrder(id);
+                    System.out.println(serviceOrder);
+                }
+                catch (ServiceOrderNotFoundException e) {
+                    System.out.println(e.getMessage());
+                }
+                    break;
+                case 3:
+                    System.out.println("Which types of service orders do you want to list?");
+                    System.out.println("1- Open\n2- Closed\n3-In Progress\n4- All");
+                    int index = Integer.parseInt(scanner.nextLine());
+                    serviceOrderService.listServiceOrders(
+                            switch (index) {
+                                case 1 -> ServiceOrderStatus.OPEN;
+                                case 2 -> ServiceOrderStatus.CLOSED;
+                                case 3 -> ServiceOrderStatus.IN_PROGRESS;
+                                default -> null;
+                            }
+                    ); break;
+                case 4:
+                    try {
+                        System.out.print("Enter Service Order ID: ");
+                        Long id = Long.parseLong(scanner.nextLine());
+                        serviceOrderService.removeServiceOrder(id);
+                        System.out.println("Service Order Removed!");
+                    }
+                    catch (ServiceOrderNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+            }
         }
     }
 
@@ -269,4 +348,5 @@ public class Menu {
         System.out.print("\u001b[H\u001b[2J");
         System.out.flush();
     }
+
 }
