@@ -2,10 +2,7 @@ package ui;
 
 import exception.*;
 import model.*;
-import service.ClientService;
-import service.EmployeeService;
-import service.PartService;
-import service.ServiceOrderService;
+import service.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -79,20 +76,8 @@ public class Menu {
                     break;
                 case 2:
                     try {
-                        System.out.println("Do you want to search by CPF or ID? (1-CPF/2-ID): ");
-                        int option = Integer.parseInt(scanner.nextLine());
-                        if (option == 1) {
-                            System.out.print("Enter CPF: ");
-                            String cpf = scanner.nextLine();
-                            Client client = clientService.get(cpf);
-                            System.out.println(client);
-                        }
-                        else {
-                            System.out.print("Enter ID: ");
-                            Long id = Long.parseLong(scanner.nextLine());
-                            Client client = clientService.get(id);
-                            System.out.println(client);
-                        }
+                        Client client = findByCpfOrId(clientService);
+                        System.out.println(client);
                     }
                     catch (ClientNotFoundException e) {
                         System.out.println(e.getMessage());
@@ -101,40 +86,17 @@ public class Menu {
                 case 3: clientService.list(); break;
                 case 4:
                     try {
-                        System.out.println("Do you want to remove by CPF or ID? (1-CPF/2-ID): ");
-                        int option = Integer.parseInt(scanner.nextLine());
-                        if (option == 1) {
-                            System.out.print("Enter CPF: ");
-                            String cpf = scanner.nextLine();
-                            clientService.remove(cpf);
-                            System.out.println("Client removed!");
-                        }
-                        else {
-                            System.out.print("Enter ID: ");
-                            Long id = Long.parseLong(scanner.nextLine());
-                            clientService.remove(id);
-                            System.out.println("Client removed!");
-                        }
+                        Client client = findByCpfOrId(clientService);
+                        clientService.remove(client.getId());
+                        System.out.println("Client removed!");
                     }
                     catch (ClientNotFoundException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
                 case 5:
-                    Client client;
                     try {
-                        System.out.println("Do you want to search by CPF or ID? (1-CPF/2-ID): ");
-                        int option = Integer.parseInt(scanner.nextLine());
-                        if (option == 1) {
-                            System.out.print("Enter CPF: ");
-                            String cpf = scanner.nextLine();
-                            client = clientService.get(cpf);
-                        }
-                        else {
-                            System.out.print("Enter ID: ");
-                            Long id = Long.parseLong(scanner.nextLine());
-                            client = clientService.get(id);
-                        }
+                        Client client = findByCpfOrId(clientService);
                         System.out.println(client);
                         Car car = addCar();
                         clientService.addCar(client, car);
@@ -173,20 +135,8 @@ public class Menu {
                     break;
                 case 2:
                     try {
-                        System.out.println("Do you want to search by CPF or ID? (1-CPF/2-ID): ");
-                        int option = Integer.parseInt(scanner.nextLine());
-                        if (option == 1) {
-                            System.out.print("Enter CPF: ");
-                            String cpf = scanner.nextLine();
-                            Employee employee = employeeService.get(cpf);
-                            System.out.println(employee);
-                        }
-                        else {
-                            System.out.print("Enter ID: ");
-                            Long id = Long.parseLong(scanner.nextLine());
-                            Employee employee = employeeService.get(id);
-                            System.out.println(employee);
-                        }
+                        Employee employee = findByCpfOrId(employeeService);
+                        System.out.println(employee);
                     }
                     catch (EmployeeNotFoundException e) {
                         System.out.println(e.getMessage());
@@ -195,20 +145,9 @@ public class Menu {
                 case 3: employeeService.list(); break;
                 case 4:
                     try {
-                        System.out.println("Do you want to remove by CPF or ID? (1-CPF/2-ID): ");
-                        int option = Integer.parseInt(scanner.nextLine());
-                        if (option == 1) {
-                            System.out.print("Enter CPF: ");
-                            String cpf = scanner.nextLine();
-                            employeeService.remove(cpf);
-                            System.out.println("Employee removed!");
-                        }
-                        else {
-                            System.out.print("Enter ID: ");
-                            Long id = Long.parseLong(scanner.nextLine());
-                            employeeService.remove(id);
-                            System.out.println("Employee removed!");
-                        }
+                        Employee employee = findByCpfOrId(employeeService);
+                        employeeService.remove(employee.getId());
+                        System.out.println("Employee removed!");
                     }
                     catch (EmployeeNotFoundException e) {
                         System.out.println(e.getMessage());
@@ -277,22 +216,9 @@ public class Menu {
             switch (choice) {
                 case 1:
                     try {
-                        Client client;
                         System.out.println("On behalf of which client do you wish to open the order?");
-                        System.out.println("Do you want to search by CPF or ID? (1-CPF/2-ID): ");
-                        int option = Integer.parseInt(scanner.nextLine());
-                        if (option == 1) {
-                            System.out.print("Enter CPF: ");
-                            String cpf = scanner.nextLine();
-                            client = clientService.get(cpf);
-                            System.out.println(client);
-                        }
-                        else {
-                            System.out.print("Enter ID: ");
-                            Long id = Long.parseLong(scanner.nextLine());
-                            client = clientService.get(id);
-                            System.out.println(client);
-                        }
+                        Client client = findByCpfOrId(clientService);
+                        System.out.println(client);
                         List<Car> cars = client.listCars();
                         if (!cars.isEmpty()) {
                             System.out.println("Choose which car you want to add to the order.");
@@ -356,6 +282,18 @@ public class Menu {
         }
     }
 
+    private <T> T findByCpfOrId (CrudService<T> service) {
+        System.out.println("Do you want to search by CPF or ID? (1-CPF/2-ID): ");
+        int option = Integer.parseInt(scanner.nextLine());
+        if (option == 1) {
+            System.out.print("Enter CPF: ");
+            return service.get(scanner.nextLine());
+        }
+        else {
+            System.out.print("Enter ID: ");
+            return service.get(Long.parseLong(scanner.nextLine()));
+        }
+    }
     public Car addCar () {
         System.out.print("What is the brand of the car? ");
         String brand = scanner.nextLine();
@@ -383,5 +321,4 @@ public class Menu {
         System.out.print("\u001b[H\u001b[2J");
         System.out.flush();
     }
-
 }
