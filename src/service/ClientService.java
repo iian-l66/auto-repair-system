@@ -10,7 +10,7 @@ import repository.ClientRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ClientService implements  CrudService<Client> {
+public class ClientService implements CrudService<Client>, CpfSearchable<Client> {
     private final ClientRepository clientRepository;
 
     public ClientService(ClientRepository clientRepository) {
@@ -33,6 +33,7 @@ public class ClientService implements  CrudService<Client> {
         else
             clientRepository.listClients();
     }
+
 
     public void addCar (Client client, Car car) {
         if (client.listCars().stream().anyMatch(c -> c.

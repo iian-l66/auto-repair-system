@@ -9,14 +9,15 @@ import repository.ServiceOrderRepository;
 import java.util.List;
 
 
-public class ServiceOrderService {
+public class ServiceOrderService implements CrudService<ServiceOrder> {
     private final ServiceOrderRepository serviceOrderRepository;
 
     public ServiceOrderService(ServiceOrderRepository serviceOrderRepository) {
         this.serviceOrderRepository = serviceOrderRepository;
     }
 
-    public void addServiceOrder (ServiceOrder serviceOrder) {
+    @Override
+    public void add (ServiceOrder serviceOrder) {
         if (serviceOrderRepository.getServiceOrderMap().values()
             .stream().anyMatch(x  -> x.getCar().getPlate()
                         .equals(serviceOrder.getCar().getPlate()) && x.getStatus() != ServiceOrderStatus.CLOSED))
@@ -25,7 +26,12 @@ public class ServiceOrderService {
         serviceOrderRepository.addServiceOrder(serviceOrder);
     }
 
-    public void listServiceOrders (ServiceOrderStatus status) {
+    @Override
+    public void list() {
+        serviceOrderRepository.listServiceOrders();
+    }
+
+    public void list (ServiceOrderStatus status) {
         if (serviceOrderRepository.getServiceOrderMap().isEmpty())
             System.out.println("No ServiceOrders registered yet");
         else if (status == null)
@@ -43,13 +49,15 @@ public class ServiceOrderService {
         }
     }
 
-    public ServiceOrder getServiceOrder (Long id) {
+    @Override
+    public ServiceOrder get (Long id) {
         if (!serviceOrderRepository.getServiceOrderMap().containsKey(id))
             throw new ServiceOrderNotFoundException("This OS is not registered");
         return serviceOrderRepository.getServiceOrder(id);
     }
 
-    public void removeServiceOrder (Long id) {
+    @Override
+    public void remove (Long id) {
         if (!serviceOrderRepository.getServiceOrderMap().containsKey(id))
             throw new ServiceOrderNotFoundException("This OS is not registered");
 

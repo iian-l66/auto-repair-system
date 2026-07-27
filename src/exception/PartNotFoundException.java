@@ -1,6 +1,6 @@
 package exception;
 
-public class PartNotFoundException extends RuntimeException {
+public class PartNotFoundException extends EntityNotFoundException {
     public PartNotFoundException(String message) {
         super(message);
     }

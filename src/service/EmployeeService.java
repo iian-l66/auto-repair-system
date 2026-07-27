@@ -5,7 +5,7 @@ import exception.EmployeeNotFoundException;
 import model.Employee;
 import repository.EmployeeRepository;
 
-public class EmployeeService implements CrudService<Employee>{
+public class EmployeeService implements CrudService<Employee>, CpfSearchable<Employee>{
     private final EmployeeRepository employeeRepository;
 
     public EmployeeService(EmployeeRepository employeeRepository) {

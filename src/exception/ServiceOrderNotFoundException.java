@@ -1,6 +1,6 @@
 package exception;
 
-public class ServiceOrderNotFoundException extends RuntimeException {
+public class ServiceOrderNotFoundException extends EntityNotFoundException {
     public ServiceOrderNotFoundException(String message) {
         super(message);
     }

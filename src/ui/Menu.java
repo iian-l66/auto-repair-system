@@ -7,6 +7,7 @@ import service.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Supplier;
 
 public class Menu {
     private final Scanner scanner;
@@ -26,7 +27,7 @@ public class Menu {
 
     public void option (int input) {
         switch (input) {
-            case 1: clientMenu(); break;
+            case 1: ; clientMenu(); break;
             case 2: employeeMenu(); break;
             case 3: partMenu(); break;
             case 4: serviceOrderMenu(); break;
@@ -76,7 +77,7 @@ public class Menu {
                     break;
                 case 2:
                     try {
-                        Client client = findByCpfOrId(clientService);
+                        Client client = findByCpfOrId(clientService, clientService);
                         System.out.println(client);
                     }
                     catch (ClientNotFoundException e) {
@@ -86,7 +87,7 @@ public class Menu {
                 case 3: clientService.list(); break;
                 case 4:
                     try {
-                        Client client = findByCpfOrId(clientService);
+                        Client client = findByCpfOrId(clientService, clientService);
                         clientService.remove(client.getId());
                         System.out.println("Client removed!");
                     }
@@ -96,7 +97,7 @@ public class Menu {
                     break;
                 case 5:
                     try {
-                        Client client = findByCpfOrId(clientService);
+                        Client client = findByCpfOrId(clientService, clientService);
                         System.out.println(client);
                         Car car = addCar();
                         clientService.addCar(client, car);
@@ -135,7 +136,7 @@ public class Menu {
                     break;
                 case 2:
                     try {
-                        Employee employee = findByCpfOrId(employeeService);
+                        Employee employee = findByCpfOrId(employeeService, employeeService);
                         System.out.println(employee);
                     }
                     catch (EmployeeNotFoundException e) {
@@ -145,7 +146,7 @@ public class Menu {
                 case 3: employeeService.list(); break;
                 case 4:
                     try {
-                        Employee employee = findByCpfOrId(employeeService);
+                        Employee employee = findByCpfOrId(employeeService, employeeService);
                         employeeService.remove(employee.getId());
                         System.out.println("Employee removed!");
                     }
@@ -175,24 +176,24 @@ public class Menu {
                     String brand = scanner.nextLine();
                     System.out.print("Part price: ");
                     BigDecimal price = new BigDecimal(scanner.nextLine());
-                    partService.addPart(new Part(name, brand, price));
+                    partService.add(new Part(name, brand, price));
                     break;
                 case 2: try {
                     System.out.print("Enter Part ID: ");
                     Long id = Long.parseLong(scanner.nextLine());
-                    Part part = partService.getPart(id);
+                    Part part = partService.get(id);
                     System.out.println(part);
                 }
                 catch (PartNotFoundException e) {
                     System.out.println(e.getMessage());
                 }
                     break;
-                case 3: partService.listParts(); break;
+                case 3: partService.list(); break;
                 case 4:
                     try {
                         System.out.print("Enter Part ID: ");
                         Long id = Long.parseLong(scanner.nextLine());
-                        partService.removePart(id);
+                        partService.remove(id);
                         System.out.println("Part removed!");
                     }
                     catch (PartNotFoundException e) {
@@ -217,7 +218,7 @@ public class Menu {
                 case 1:
                     try {
                         System.out.println("On behalf of which client do you wish to open the order?");
-                        Client client = findByCpfOrId(clientService);
+                        Client client = findByCpfOrId(clientService, clientService);
                         System.out.println(client);
                         List<Car> cars = client.listCars();
                         if (!cars.isEmpty()) {
@@ -234,7 +235,7 @@ public class Menu {
                             }
                             Car car = cars.get(index - 1);
                             System.out.println(car);
-                            serviceOrderService.addServiceOrder(new ServiceOrder(car, client));
+                            serviceOrderService.add(new ServiceOrder(car, client));
                             System.out.println("Service Order created successfully!");
                         }
                         else {
@@ -248,7 +249,7 @@ public class Menu {
                 case 2: try {
                     System.out.print("Enter Service Order ID: ");
                     Long id = Long.parseLong(scanner.nextLine());
-                    ServiceOrder serviceOrder = serviceOrderService.getServiceOrder(id);
+                    ServiceOrder serviceOrder = serviceOrderService.get(id);
                     System.out.println(serviceOrder);
                 }
                 catch (ServiceOrderNotFoundException e) {
@@ -259,7 +260,7 @@ public class Menu {
                     System.out.println("Which types of service orders do you want to list?");
                     System.out.println("1- Open\n2- Closed\n3- In Progress\n4- All");
                     int index = Integer.parseInt(scanner.nextLine());
-                    serviceOrderService.listServiceOrders(
+                    serviceOrderService.list(
                             switch (index) {
                                 case 1 -> ServiceOrderStatus.OPEN;
                                 case 2 -> ServiceOrderStatus.CLOSED;
@@ -271,7 +272,7 @@ public class Menu {
                     try {
                         System.out.print("Enter Service Order ID: ");
                         Long id = Long.parseLong(scanner.nextLine());
-                        serviceOrderService.removeServiceOrder(id);
+                        serviceOrderService.remove(id);
                         System.out.println("Service Order Removed!");
                     }
                     catch (ServiceOrderNotFoundException e) {
@@ -282,18 +283,19 @@ public class Menu {
         }
     }
 
-    private <T> T findByCpfOrId (CrudService<T> service) {
+    private <T> T findByCpfOrId (CrudService<T> service, CpfSearchable<T> cpfSearchable) {
         System.out.println("Do you want to search by CPF or ID? (1-CPF/2-ID): ");
         int option = Integer.parseInt(scanner.nextLine());
         if (option == 1) {
             System.out.print("Enter CPF: ");
-            return service.get(scanner.nextLine());
+            return cpfSearchable.get(scanner.nextLine());
         }
         else {
             System.out.print("Enter ID: ");
             return service.get(Long.parseLong(scanner.nextLine()));
         }
     }
+
     public Car addCar () {
         System.out.print("What is the brand of the car? ");
         String brand = scanner.nextLine();
