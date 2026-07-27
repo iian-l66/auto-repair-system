@@ -10,14 +10,15 @@ import repository.ClientRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ClientService {
+public class ClientService implements  CrudService<Client> {
     private final ClientRepository clientRepository;
 
     public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
 
-    public void addClient (Client client) {
+    @Override
+    public void add (Client client) {
         if (clientRepository.getClientMap().values().stream()
                 .anyMatch(x -> x.getCpf().equals(client.getCpf())))
             throw new CpfAlreadyRegisteredException("this cpf already exists");
@@ -25,7 +26,8 @@ public class ClientService {
         clientRepository.addClient(client);
     }
 
-    public void listClients () {
+    @Override
+    public void list () {
         if (clientRepository.getClientMap().isEmpty())
             System.out.println("No clients registered yet.");
         else
@@ -40,27 +42,31 @@ public class ClientService {
         client.addCar(car);
     }
 
-    public Client getClient (Long id) {
+    @Override
+    public Client get(Long id) {
         if (!clientRepository.getClientMap().containsKey(id))
             throw new ClientNotFoundException("This id is not registered.");
 
         return clientRepository.getClient(id);
     }
 
-    public Client getClient (String cpf) {
+    @Override
+    public Client get(String cpf) {
         return clientRepository.getClientMap().values().stream()
                 .filter(x -> x.getCpf().equals(cpf)).findFirst().orElseThrow(
                         () -> new ClientNotFoundException("This cpf is not registered."));
     }
 
-    public void removeClient (Long id) {
+    @Override
+    public void remove (Long id) {
         if (!clientRepository.getClientMap().containsKey(id))
             throw new ClientNotFoundException("This id is not registered.");
 
         clientRepository.removeClient(id);
     }
 
-    public void removeClient (String cpf) {
+    @Override
+    public void remove (String cpf) {
         clientRepository.removeClient(clientRepository.getClientMap().values().stream()
                 .filter(x -> x.getCpf().equals(cpf)).findFirst().orElseThrow(
                         () -> new ClientNotFoundException("This cpf is not registered.")).getId());

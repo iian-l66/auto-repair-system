@@ -1,6 +1,5 @@
 package ui;
 
-import com.sun.security.jgss.GSSUtil;
 import exception.*;
 import model.*;
 import service.ClientService;
@@ -55,7 +54,7 @@ public class Menu {
 
     public void clientMenu () {
         int choice = 0;
-        while (choice != 5) {
+        while (choice != 6) {
             System.out.println("===CLIENTS===");
             System.out.println("[1]- Add Client");
             System.out.println("[2]- Search Client");
@@ -72,7 +71,7 @@ public class Menu {
                     int age = Integer.parseInt(scanner.nextLine());
                     System.out.print("Client CPF: ");
                     String cpf = scanner.nextLine();
-                    clientService.addClient(new Client(name, age, cpf));
+                    clientService.add(new Client(name, age, cpf));
                 }
                 catch (CpfAlreadyRegisteredException e) {
                     System.out.println(e.getMessage());
@@ -85,13 +84,13 @@ public class Menu {
                         if (option == 1) {
                             System.out.print("Enter CPF: ");
                             String cpf = scanner.nextLine();
-                            Client client = clientService.getClient(cpf);
+                            Client client = clientService.get(cpf);
                             System.out.println(client);
                         }
                         else {
                             System.out.print("Enter ID: ");
                             Long id = Long.parseLong(scanner.nextLine());
-                            Client client = clientService.getClient(id);
+                            Client client = clientService.get(id);
                             System.out.println(client);
                         }
                     }
@@ -99,7 +98,7 @@ public class Menu {
                         System.out.println(e.getMessage());
                     }
                     break;
-                case 3: clientService.listClients(); break;
+                case 3: clientService.list(); break;
                 case 4:
                     try {
                         System.out.println("Do you want to remove by CPF or ID? (1-CPF/2-ID): ");
@@ -107,13 +106,13 @@ public class Menu {
                         if (option == 1) {
                             System.out.print("Enter CPF: ");
                             String cpf = scanner.nextLine();
-                            clientService.removeClient(cpf);
+                            clientService.remove(cpf);
                             System.out.println("Client removed!");
                         }
                         else {
                             System.out.print("Enter ID: ");
                             Long id = Long.parseLong(scanner.nextLine());
-                            clientService.removeClient(id);
+                            clientService.remove(id);
                             System.out.println("Client removed!");
                         }
                     }
@@ -129,12 +128,12 @@ public class Menu {
                         if (option == 1) {
                             System.out.print("Enter CPF: ");
                             String cpf = scanner.nextLine();
-                            client = clientService.getClient(cpf);
+                            client = clientService.get(cpf);
                         }
                         else {
                             System.out.print("Enter ID: ");
                             Long id = Long.parseLong(scanner.nextLine());
-                            client = clientService.getClient(id);
+                            client = clientService.get(id);
                         }
                         System.out.println(client);
                         Car car = addCar();
@@ -166,7 +165,7 @@ public class Menu {
                     int age = Integer.parseInt(scanner.nextLine());
                     System.out.print("Employee CPF: ");
                     String cpf = scanner.nextLine();
-                    employeeService.addEmployee(new Employee(name, age, cpf));
+                    employeeService.add(new Employee(name, age, cpf));
                 }
                 catch (CpfAlreadyRegisteredException e) {
                     System.out.println(e.getMessage());
@@ -179,13 +178,13 @@ public class Menu {
                         if (option == 1) {
                             System.out.print("Enter CPF: ");
                             String cpf = scanner.nextLine();
-                            Employee employee = employeeService.getEmployee(cpf);
+                            Employee employee = employeeService.get(cpf);
                             System.out.println(employee);
                         }
                         else {
                             System.out.print("Enter ID: ");
                             Long id = Long.parseLong(scanner.nextLine());
-                            Employee employee = employeeService.getEmployee(id);
+                            Employee employee = employeeService.get(id);
                             System.out.println(employee);
                         }
                     }
@@ -193,7 +192,7 @@ public class Menu {
                         System.out.println(e.getMessage());
                     }
                     break;
-                case 3: employeeService.listEmployees(); break;
+                case 3: employeeService.list(); break;
                 case 4:
                     try {
                         System.out.println("Do you want to remove by CPF or ID? (1-CPF/2-ID): ");
@@ -201,13 +200,13 @@ public class Menu {
                         if (option == 1) {
                             System.out.print("Enter CPF: ");
                             String cpf = scanner.nextLine();
-                            employeeService.removeEmployee(cpf);
+                            employeeService.remove(cpf);
                             System.out.println("Employee removed!");
                         }
                         else {
                             System.out.print("Enter ID: ");
                             Long id = Long.parseLong(scanner.nextLine());
-                            employeeService.removeEmployee(id);
+                            employeeService.remove(id);
                             System.out.println("Employee removed!");
                         }
                     }
@@ -285,13 +284,13 @@ public class Menu {
                         if (option == 1) {
                             System.out.print("Enter CPF: ");
                             String cpf = scanner.nextLine();
-                            client = clientService.getClient(cpf);
+                            client = clientService.get(cpf);
                             System.out.println(client);
                         }
                         else {
                             System.out.print("Enter ID: ");
                             Long id = Long.parseLong(scanner.nextLine());
-                            client = clientService.getClient(id);
+                            client = clientService.get(id);
                             System.out.println(client);
                         }
                         List<Car> cars = client.listCars();
